@@ -96,7 +96,8 @@ impl<'a, 'b> Renderer<'a, 'b> {
         quote!(
             #dependencies
 
-            #[Interface(
+            #[derive(Interface)]
+            #[graphql(
                 #fields
             )]
             pub enum #name {
