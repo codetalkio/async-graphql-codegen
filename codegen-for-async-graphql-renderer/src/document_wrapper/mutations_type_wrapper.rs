@@ -45,18 +45,19 @@ impl<'a, 'b> MutationsTypeWrapper<'a, 'b> {
     }
 
     pub fn dependencies(&self) -> Vec<Dependency> {
-        let mut dep: Vec<Dependency> = self
+        let mut deps: Vec<Dependency> = self
             .mutations()
             .iter()
             .flat_map(|f| f.dependencies())
             .collect();
 
-        let mut arg_dep: Vec<Dependency> = self
+        let arg_deps: Vec<Dependency> = self
             .mutations()
             .iter()
             .flat_map(|f| f.arguments_dependencies())
             .collect();
-        dep.append(&mut arg_dep);
-        dep
+        deps.extend(arg_deps);
+        deps.dedup_by(|a, b| a.name == b.name);
+        deps
     }
 }

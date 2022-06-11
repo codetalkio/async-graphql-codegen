@@ -64,6 +64,7 @@ pub trait SupportFields {
             .flat_map(|f| f.arguments_dependencies())
             .collect();
         deps.extend(arg_deps);
+        deps.dedup_by(|a, b| a.name == b.name);
         deps
     }
 

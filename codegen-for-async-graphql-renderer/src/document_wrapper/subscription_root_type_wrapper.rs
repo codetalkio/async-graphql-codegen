@@ -45,6 +45,7 @@ impl<'a, 'b> SubscriptionRootTypeWrapper<'a, 'b> {
         self.mutations()
             .iter()
             .flat_map(|f| f.arguments_dependencies())
+            .dedup_by(|a, b| a.name == b.name)
             .collect()
     }
 }
