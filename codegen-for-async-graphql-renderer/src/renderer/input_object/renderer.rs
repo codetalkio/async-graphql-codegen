@@ -43,7 +43,8 @@ impl<'a, 'b> Renderer<'a, 'b> {
         let name = Ident::new(&self.wrapper_object.name(), Span::call_site());
 
         quote!(
-            use async_graphql::InputObject;
+            // TODO: later better scan deps
+            use async_graphql::*;
 
             #[derive(InputObject)]
             pub struct #name {
