@@ -1,5 +1,6 @@
 use proc_macro2::{Ident, Span, TokenStream};
-use quote::quote;
+use quote::{quote, ToTokens};
+use crate::document_wrapper::RenderType;
 
 use super::{SupportField, SupportType, SupportTypeName};
 
@@ -21,8 +22,10 @@ pub trait Render {
         let name = Ident::new(&name, Span::call_site());
         match (f.non_null(), f.is_list()) {
             (true, false) => quote!(#name),
+            // TODO: may be slice data
             (true, true) => quote!(Vec<#name>),
             (false, false) => quote!(Option<#name>),
+            // TODO: may be slice data
             (false, true) => quote!(Option<Vec<#name>>),
         }
     }
@@ -73,13 +76,15 @@ impl Renderer {
         let arguments = Self::arguments_token(f);
         let arguments_variebles = Self::arguments_variebles(f);
         let field = match f.description() {
-            Some(desc) => quote!(#[field(desc = #desc)]),
+            // TODO: unwrap(
+            // TODO: Some(desc) => format!(r#"/// {}"#, desc).parse().unwrap(),
+            Some(desc) => quote! {},
             None => quote!(),
         };
         quote!(
             #field
-            pub async fn #n(&self, ctx: &Context<'_>, #arguments ) -> #ty {
-                ctx.data_unchecked::<DataSource>().#n(#arguments_variebles)
+            pub async fn #n(&self, ctx: &Context<'_>, #arguments) -> #ty {
+                todo!()
             }
         )
     }
@@ -91,8 +96,8 @@ impl Renderer {
         let n = &Self::field_name_token(f);
         let ty = &Self::struct_name_token(f);
         quote!(
-            pub async fn #n(&self) -> #ty {
-                self.#n.clone()
+            pub async fn #n(&self, ctx: &Context<'_>) -> #ty {
+                todo!()
             }
         )
     }

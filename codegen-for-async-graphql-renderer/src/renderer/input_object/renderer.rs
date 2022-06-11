@@ -43,9 +43,9 @@ impl<'a, 'b> Renderer<'a, 'b> {
         let name = Ident::new(&self.wrapper_object.name(), Span::call_site());
 
         quote!(
-            use async_graphql::*;
+            use async_graphql::InputObject;
 
-            #[InputObject]
+            #[derive(InputObject)]
             pub struct #name {
                 #field_properties_token
             }
@@ -58,7 +58,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
             let field_property_token = FieldRenderer::field_property_token(f);
             res = quote!(
                 #res
-                #field_property_token
+                #field_property_token,
             )
         });
         res

@@ -28,42 +28,36 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn token_stream(&self) -> TokenStream {
-        let src = quote!(
-            use crate::DataSource;
-            use super::ResolveMutation;
-        );
         let modules = self.modules();
         let uses = self.uses();
         quote!(
-            #src
             #modules
             #uses
         )
     }
 
     fn modules(&self) -> TokenStream {
-        let mut src = quote!();
+        let mut modules = quote! { };
         self.context.structured_file_paths().iter().for_each(|f| {
             let name = Ident::new(f.0, Span::call_site());
-            src = quote!(
-              #src
-              pub mod #name;
+            modules = quote!(
+              #modules
+              mod #name;
             );
         });
-        src
+        modules
     }
 
     fn uses(&self) -> TokenStream {
-        let mut src = quote!();
+        let mut uses = quote! { };
         self.context.file_paths().iter().for_each(|f| {
             let super_module_name = Ident::new(&f.super_module_name, Span::call_site());
-            let module_name = Ident::new(&f.module_name, Span::call_site());
             let name = Ident::new(&f.name, Span::call_site());
-            src = quote!(
-                #src
-                pub use #super_module_name::#module_name::#name;
+            uses = quote!(
+                #uses
+                pub use #super_module_name::#name;
             )
         });
-        src
+        uses
     }
 }

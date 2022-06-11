@@ -53,10 +53,18 @@ pub trait SupportFields {
 
     #[must_use]
     fn dependencies(&self) -> Vec<Dependency> {
-        self.fields()
+        let mut deps: Vec<_> = self.fields()
             .into_iter()
             .flat_map(|f| f.dependencies())
-            .collect()
+            .collect();
+
+        let arg_deps: Vec<_> = self
+            .fields()
+            .iter()
+            .flat_map(|f| f.arguments_dependencies())
+            .collect();
+        deps.extend(arg_deps);
+        deps
     }
 
     fn field_partition(&self) -> (Vec<FieldWrapper>, Vec<FieldWrapper>) {
@@ -133,11 +141,12 @@ pub trait SupportType: RenderType {
     fn nested_type_name(t: &Type) -> String {
         match &*t {
             Type::Named(name) => name.clone(),
-            Type::List(t) => match &**t {
-                Type::Named(name) => name.clone(),
-                _ => unreachable!("Not Implemented"),
-            },
-            _ => unreachable!("Not Implemented"),
+            Type::List(t) => {
+                Self::nested_type_name(t)
+            }
+            Type::NonNull(t) => {
+                Self::nested_type_name(t)
+            }
         }
     }
 

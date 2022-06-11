@@ -58,8 +58,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
     fn dependencies_token(&self) -> TokenStream {
         let dep = Self::render_dependencies(self.wrapper_object.dependencies());
         quote!(
-            use async_graphql::*;
-            use super::DataSource;
+            use async_graphql::{Object, Context};
             #dep
         )
     }
@@ -75,7 +74,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
             let field_property = FieldRenderer::field_property_token(f);
             properties = quote!(
                 #properties
-                #field_property
+                #field_property,
             );
         });
         properties
@@ -103,10 +102,8 @@ impl<'a, 'b> Renderer<'a, 'b> {
         quote!(
             #dependencies
 
-            #[derive(Debug)]
-            pub struct #name {
-                #struct_properties
-            }
+            // TODO: add comment
+            pub struct #name;
 
             #[Object]
             impl #name {
