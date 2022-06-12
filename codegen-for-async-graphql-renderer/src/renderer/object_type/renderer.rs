@@ -66,7 +66,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
         );
         quote!(
             // TODO: later better scan deps
-            use async_graphql::*;
+            use async_graphql::{Context, Object, Enum, InputObject, Union, Interface, Scalar, ScalarType, ID, Value, InputValueResult};
             #dep
         )
     }

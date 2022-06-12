@@ -66,7 +66,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
         );
         quote!(
             use super::DataSource;
-            use async_graphql::*;
+            use async_graphql::{Context, Object, Enum, InputObject, Union, Interface, Scalar, ScalarType, ID, Value, InputValueResult};
             use futures::{stream, Stream};
 
             #dep

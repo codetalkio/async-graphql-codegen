@@ -45,7 +45,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
 
     fn scalar_code(struct_name: &Ident) -> TokenStream {
         quote!(
-            use async_graphql::*;
+            use async_graphql::{Context, Object, Enum, InputObject, Union, Interface, Scalar, ScalarType, ID, Value, InputValueResult};
 
             #[derive(Debug, Clone)]
             pub struct #struct_name(!);

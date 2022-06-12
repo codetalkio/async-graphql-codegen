@@ -41,15 +41,24 @@ impl<'a, 'b> Renderer<'a, 'b> {
     fn token_stream(&self) -> TokenStream {
         let field_properties_token = self.field_properties_token();
         let name = Ident::new(&self.wrapper_object.name(), Span::call_site());
+        let deps = self.dependencies_token();
 
         quote!(
-            // TODO: later better scan deps
-            use async_graphql::*;
+            #deps
 
             #[derive(InputObject, Debug)]
             pub struct #name {
                 #field_properties_token
             }
+        )
+    }
+
+    fn dependencies_token(&self) -> TokenStream {
+        let dep = Self::render_dependencies(&self.wrapper_object.name(), vec![]);
+        quote!(
+            // TODO: later better scan deps
+            use async_graphql::{Context, Object, Enum, InputObject, Union, Interface, Scalar, ScalarType, ID, Value, InputValueResult};
+            #dep
         )
     }
 

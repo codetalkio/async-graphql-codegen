@@ -62,7 +62,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
             self.wrapper_object.dependencies(),
         );
         quote!(
-            use async_graphql::*;
+            use async_graphql::{Context, Object, Enum, InputObject, Union, Interface, Scalar, ScalarType, ID, Value, InputValueResult};
 
             #dep
         )
