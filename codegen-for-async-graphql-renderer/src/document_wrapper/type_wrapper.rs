@@ -1,15 +1,26 @@
-use super::{snake_case, Context, FieldWrapper, InputValueWrapper};
+use super::{Context, FieldWrapper, InputValueWrapper};
 use async_graphql_parser::types::{
     BaseType as BaseTypeDefinition, InputValueDefinition, Type, TypeDefinition,
 };
+use heck::{ToPascalCase, ToSnakeCase};
 
 pub trait RenderType {
-    fn name(&self) -> String;
+    fn gql_name(&self) -> String;
     fn description(&self) -> Option<&String>;
 
     #[must_use]
+    fn name(&self) -> String {
+        self.gql_name().to_pascal_case()
+    }
+
+    #[must_use]
     fn field_name(&self) -> String {
-        snake_case(&self.name())
+        let name = self.name().to_snake_case();
+        if syn::parse_str::<syn::Ident>(&name).is_err() {
+            format!("_{}", name)
+        } else {
+            name
+        }
     }
 }
 
@@ -25,7 +36,7 @@ pub type Dependency = ObjectPath;
 pub trait FileRender: RenderType {
     #[must_use]
     fn file_name(&self) -> String {
-        snake_case(&self.name())
+        self.name().to_snake_case()
     }
 
     fn super_module_name(&self) -> String;
@@ -68,7 +79,6 @@ pub trait SupportFields {
             .flat_map(|f| f.arguments_dependencies())
             .collect();
         deps.extend(arg_deps);
-        deps.dedup_by(|a, b| a.name == b.name);
         deps
     }
 
@@ -128,15 +138,13 @@ pub trait SupportType: RenderType {
     }
 
     #[must_use]
+    fn gql_type_name(&self) -> String {
+        Self::nested_type_name(self.ty())
+    }
+
+    #[must_use]
     fn type_name(&self) -> String {
-        //match &self.ty() {
-        //    Type::Named(name) => name.clone(),
-        //    Type::NonNull(t) | Type::List(t) => Self::nested_type_name(t),
-        //}
-        match &self.ty().base {
-            BaseTypeDefinition::Named(name) => name.as_str().into(),
-            BaseTypeDefinition::List(t) => Self::nested_type_name(t.as_ref()),
-        }
+        self.gql_type_name().to_pascal_case()
     }
 
     #[must_use]
@@ -169,7 +177,7 @@ pub enum ScalarTypeOnScalar {
 pub trait SupportTypeName: SupportType + UseContext {
     fn scalar_type(&self) -> Option<ScalarTypeOnScalar> {
         let names = self.context().scalar_names();
-        let name = &self.type_name();
+        let name = &self.gql_type_name();
         match name.as_str() {
             "String" | "Bool" | "Int" | "Float" | "ID" => Some(ScalarTypeOnScalar::DefaultScalar),
             _ => {
@@ -199,7 +207,7 @@ pub trait SupportTypeName: SupportType + UseContext {
         }
 
         let name = self.code_type_name();
-        Some(snake_case(&name))
+        Some(name.to_snake_case())
     }
 
     #[must_use]
@@ -212,13 +220,13 @@ pub trait SupportTypeName: SupportType + UseContext {
 
     fn is_input_object_type(&self) -> bool {
         let names = self.context().input_object_type_names();
-        let name = &self.type_name();
+        let name = &self.gql_type_name();
         names.iter().any(|f| f == name)
     }
 
     fn is_union(&self) -> bool {
         let names = self.context().union_names();
-        let name = &self.type_name();
+        let name = &self.gql_type_name();
         names.iter().any(|f| f == name)
     }
 

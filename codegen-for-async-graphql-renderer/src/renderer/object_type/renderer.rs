@@ -1,4 +1,4 @@
-use quote::quote;
+use quote::{quote, ToTokens};
 
 use proc_macro2::{Ident, Span, TokenStream};
 
@@ -6,6 +6,8 @@ use super::{
     FieldRenderer, FileRender, ObjectTypeWrapper, RenderDependencies, RenderType, Save,
     SupportFields,
 };
+
+use heck::ToPascalCase;
 
 pub struct Renderer<'a, 'b> {
     wrapper_object: &'a ObjectTypeWrapper<'a, 'b>,
@@ -39,7 +41,8 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn token_stream(&self) -> TokenStream {
-        let name = self.name_token();
+        let name = self.gql_name_token();
+        let rust_name = self.name_token();
         let fields = self.custom_fields_token();
         let struct_properties = self.struct_properties_token();
         let scalar_fields_token = self.scalar_fields_token();
@@ -49,6 +52,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
         Self::object_type_code(
             &dependencies,
             &name,
+            &rust_name,
             &struct_properties,
             &fields,
             &scalar_fields_token,
@@ -56,12 +60,20 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn dependencies_token(&self) -> TokenStream {
-        let dep = Self::render_dependencies(self.wrapper_object.dependencies());
+        let dep = Self::render_dependencies(
+            &self.wrapper_object.name(),
+            self.wrapper_object.dependencies(),
+        );
         quote!(
             // TODO: later better scan deps
             use async_graphql::*;
             #dep
         )
+    }
+
+    fn gql_name_token(&self) -> TokenStream {
+        let name = Ident::new(&self.wrapper_object.gql_name(), Span::call_site());
+        quote!(#name)
     }
 
     fn name_token(&self) -> TokenStream {
@@ -95,11 +107,15 @@ impl<'a, 'b> Renderer<'a, 'b> {
 
     fn object_type_code(
         dependencies: &TokenStream,
+        gql_name: &TokenStream,
         name: &TokenStream,
         struct_properties: &TokenStream,
         fields: &TokenStream,
         scalar_fields_token: &TokenStream,
     ) -> TokenStream {
+        let gql: TokenStream = format!(r#"#[graphql(name = "{}")]"#, gql_name.to_string())
+            .parse()
+            .unwrap();
         quote!(
             #dependencies
 
@@ -108,6 +124,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
             pub struct #name;
 
             #[Object]
+            #gql
             impl #name {
                 #fields
                 #scalar_fields_token

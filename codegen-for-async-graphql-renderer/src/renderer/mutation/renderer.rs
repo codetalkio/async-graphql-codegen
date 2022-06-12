@@ -1,6 +1,5 @@
-use quote::quote;
-
 use proc_macro2::{Ident, Span, TokenStream};
+use quote::quote;
 
 use super::{
     FileRender, MutationTypeWrapper, MutationsTypeWrapper, RenderDependencies, RenderField,
@@ -58,7 +57,10 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn dependencies_token(&self) -> TokenStream {
-        let dep = Self::render_dependencies(self.wrapper_object.dependencies());
+        let dep = Self::render_dependencies(
+            &self.wrapper_object.name(),
+            self.wrapper_object.dependencies(),
+        );
         quote!(
             use async_graphql::*;
 

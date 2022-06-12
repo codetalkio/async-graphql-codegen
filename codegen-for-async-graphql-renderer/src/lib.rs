@@ -1,3 +1,5 @@
+extern crate core;
+
 mod base;
 mod document_wrapper;
 mod renderer;

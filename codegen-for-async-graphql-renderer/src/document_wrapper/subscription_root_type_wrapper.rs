@@ -17,7 +17,7 @@ impl<'a, 'b> FileRender for SubscriptionRootTypeWrapper<'a, 'b> {
 
 impl<'a, 'b> RenderType for SubscriptionRootTypeWrapper<'a, 'b> {
     #[must_use]
-    fn name(&self) -> String {
+    fn gql_name(&self) -> String {
         self.doc.name.node.as_str().into()
     }
 
@@ -47,7 +47,6 @@ impl<'a, 'b> SubscriptionRootTypeWrapper<'a, 'b> {
         self.mutations()
             .iter()
             .flat_map(|f| f.arguments_dependencies())
-            .dedup_by(|a, b| a.name == b.name)
             .collect()
     }
 }

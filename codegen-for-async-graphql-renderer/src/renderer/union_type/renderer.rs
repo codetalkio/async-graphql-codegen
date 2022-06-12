@@ -1,5 +1,6 @@
 use quote::quote;
 
+use crate::document_wrapper::RenderType;
 use proc_macro2::{Ident, Span, TokenStream};
 
 use super::{FileRender, RenderDependencies, Save, UnionTypeWrapper};
@@ -62,7 +63,10 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn dependencies_token(&self) -> TokenStream {
-        let dep = Self::render_dependencies(self.wrapper_object.dependencies());
+        let dep = Self::render_dependencies(
+            &self.wrapper_object.name(),
+            self.wrapper_object.dependencies(),
+        );
         quote!(
             use async_graphql::*;
             #dep

@@ -1,7 +1,6 @@
 mod config;
 mod context;
 mod generator;
-pub mod utils;
 
 pub use generator::generate_from_path;
 

@@ -11,7 +11,6 @@ mod subscription_type_wrapper;
 mod type_wrapper;
 mod union_type_wrapper;
 
-use crate::base::utils::snake_case;
 use crate::base::Context;
 
 pub use type_wrapper::{

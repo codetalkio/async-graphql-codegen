@@ -11,7 +11,7 @@ impl<'a, 'b> FileRender for ScalarTypeWrapper<'a, 'b> {
 
 impl<'a, 'b> RenderType for ScalarTypeWrapper<'a, 'b> {
     #[must_use]
-    fn name(&self) -> String {
+    fn gql_name(&self) -> String {
         self.doc.name.node.as_str().into()
     }
 

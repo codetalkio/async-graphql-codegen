@@ -19,7 +19,7 @@ impl<'a, 'b> FileRender for MutationsTypeWrapper<'a, 'b> {
 
 impl<'a, 'b> RenderType for MutationsTypeWrapper<'a, 'b> {
     #[must_use]
-    fn name(&self) -> String {
+    fn gql_name(&self) -> String {
         self.doc.name.node.as_str().into()
     }
 
@@ -58,7 +58,6 @@ impl<'a, 'b> MutationsTypeWrapper<'a, 'b> {
             .flat_map(|f| f.arguments_dependencies())
             .collect();
         deps.extend(arg_deps);
-        deps.dedup_by(|a, b| a.name == b.name);
         deps
     }
 }

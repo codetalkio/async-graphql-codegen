@@ -1,6 +1,6 @@
+use crate::document_wrapper::RenderType;
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::{quote, ToTokens};
-use crate::document_wrapper::RenderType;
 
 use super::{SupportField, SupportType, SupportTypeName};
 
@@ -28,6 +28,15 @@ pub trait Render {
             // TODO: may be slice data
             (false, true) => quote!(Option<Vec<#name>>),
         }
+    }
+
+    fn rename_token<T>(f: &T) -> TokenStream
+    where
+        T: SupportType,
+    {
+        let name = f.gql_name();
+        let name = Ident::new(name.as_str(), Span::call_site());
+        format!(r#"#[graphql(name = "{}")]"#, name).parse().unwrap()
     }
 }
 
@@ -81,8 +90,10 @@ impl Renderer {
             Some(desc) => quote! {},
             None => quote!(),
         };
+        let gql = &Self::rename_token(f);
         quote!(
             #field
+            #gql
             pub async fn #n(&self, ctx: &Context<'_>, #arguments) -> #ty {
                 todo!()
             }
@@ -95,7 +106,9 @@ impl Renderer {
     {
         let n = &Self::field_name_token(f);
         let ty = &Self::struct_name_token(f);
+        let gql = &Self::rename_token(f);
         quote!(
+            #gql
             pub async fn #n(&self, ctx: &Context<'_>) -> #ty {
                 todo!()
             }
@@ -108,8 +121,10 @@ impl Renderer {
     {
         let n = &Self::field_name_token(f);
         let ty = &Self::struct_name_token(f);
+        let gql = &Self::rename_token(f);
         quote!(
-           pub #n : #ty
+            #gql
+            pub #n : #ty
         )
     }
 

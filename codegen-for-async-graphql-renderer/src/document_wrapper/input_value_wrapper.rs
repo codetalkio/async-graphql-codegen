@@ -1,7 +1,8 @@
 use super::Context;
 use async_graphql_parser::types::{InputValueDefinition, Type};
+use heck::ToSnakeCase;
 
-use super::{snake_case, RenderType, SupportType, SupportTypeName, UseContext};
+use super::{RenderType, SupportType, SupportTypeName, UseContext};
 
 #[derive(Debug, Clone)]
 pub struct InputValueWrapper<'a, 'b> {
@@ -17,7 +18,7 @@ impl<'a, 'b> SupportType for InputValueWrapper<'a, 'b> {
 
 impl<'a, 'b> RenderType for InputValueWrapper<'a, 'b> {
     #[must_use]
-    fn name(&self) -> String {
+    fn gql_name(&self) -> String {
         self.doc.name.node.as_str().into()
     }
 
@@ -41,6 +42,11 @@ impl<'a, 'b> SupportTypeName for InputValueWrapper<'a, 'b> {}
 impl<'a, 'b> InputValueWrapper<'a, 'b> {
     #[must_use]
     pub fn field_name(&self) -> String {
-        snake_case(&self.doc.name.node)
+        let name = self.name().to_snake_case();
+        if syn::parse_str::<syn::Ident>(&name).is_err() {
+            format!("_{}", name)
+        } else {
+            name
+        }
     }
 }

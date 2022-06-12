@@ -68,7 +68,10 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn dependencies_token(&self) -> TokenStream {
-        let dep = Self::render_dependencies(self.wrapper_object.dependencies());
+        let dep = Self::render_dependencies(
+            &self.wrapper_object.name(),
+            self.wrapper_object.dependencies(),
+        );
         quote!(
             use async_graphql::*;
             #dep
