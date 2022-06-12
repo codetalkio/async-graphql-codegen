@@ -1,9 +1,9 @@
 [package]
 name = "codegen-for-async-graphql"
 version = "0.2.7"
-authors = ["Atsuhiro Takahashi <fxyoxbjis@gmail.com>"]
+authors = ["Atsuhiro Takahashi <fxyoxbjis@gmail.com>", "uselessgoddess <dodickgod@gmail.com>"]
 edition = "2018"
-description = "Internal code generation crate for async-graphql"
+description = "Code generation for async-graphql 4"
 publish = true
 license = "MIT"
 homepage = "https://github.com/atsuhiro/codegen-for-async-graphql"
