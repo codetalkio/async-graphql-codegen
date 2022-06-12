@@ -1,5 +1,7 @@
+mod enum_type;
 mod input_object;
 mod interface;
+mod internal;
 mod mod_file;
 mod mutation;
 mod object_type;
@@ -8,8 +10,6 @@ mod save;
 mod scalar;
 mod subscription;
 mod union_type;
-
-mod internal;
 
 use internal::dependencies::Render as RenderDependencies;
 use internal::field::Render as RenderField;
@@ -28,6 +28,7 @@ use crate::document_wrapper::{
 };
 
 pub fn render_to_files(context: &Context) {
+    enum_type::Generate::generate_files(context);
     interface::Generate::generate_files(context);
     object_type::Generate::generate_files(context);
     mutation::Generate::generate_files(context);

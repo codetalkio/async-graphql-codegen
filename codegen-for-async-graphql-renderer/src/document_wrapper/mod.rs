@@ -1,3 +1,5 @@
+mod enum_type_wrapper;
+mod enum_value_wrapper;
 mod field_wrapper;
 mod input_object_type_wrapper;
 mod input_value_wrapper;
@@ -18,6 +20,8 @@ pub use type_wrapper::{
     SupportType, SupportTypeName, UseContext,
 };
 
+pub use enum_type_wrapper::EnumTypeWrapper;
+pub use enum_value_wrapper::EnumValueWrapper;
 pub use field_wrapper::FieldWrapper;
 pub use input_object_type_wrapper::InputObjectTypeWrapper;
 pub use input_value_wrapper::InputValueWrapper;

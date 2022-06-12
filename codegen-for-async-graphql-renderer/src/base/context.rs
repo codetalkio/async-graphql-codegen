@@ -5,9 +5,9 @@ use async_graphql_parser::types::{
 use std::collections::HashMap;
 
 use crate::document_wrapper::{
-    FileRender, InputObjectTypeWrapper, InterfaceTypeWrapper, MutationsTypeWrapper, ObjectPath,
-    ObjectTypeWrapper, RenderType, ScalarTypeWrapper, SubscriptionRootTypeWrapper,
-    UnionTypeWrapper,
+    EnumTypeWrapper, FileRender, InputObjectTypeWrapper, InterfaceTypeWrapper,
+    MutationsTypeWrapper, ObjectPath, ObjectTypeWrapper, RenderType, ScalarTypeWrapper,
+    SubscriptionRootTypeWrapper, UnionTypeWrapper,
 };
 
 #[derive(Debug, Clone)]
@@ -45,6 +45,14 @@ impl<'a> Context<'a> {
             .collect()
     }
 
+    #[must_use]
+    pub fn enum_names(&self) -> Vec<String> {
+        self.enum_types()
+            .iter()
+            .map(EnumTypeWrapper::name)
+            .collect()
+    }
+
     pub fn input_object_type_names(&self) -> Vec<String> {
         self.input_object_types()
             .iter()
@@ -54,6 +62,7 @@ impl<'a> Context<'a> {
 
     pub fn file_paths(&self) -> Vec<ObjectPath> {
         vec![
+            self.enum_file_paths(),
             self.scalar_file_paths(),
             self.object_type_file_paths(),
             self.interface_type_file_paths(),
@@ -77,6 +86,10 @@ impl<'a> Context<'a> {
                 .push(f.clone());
         });
         map
+    }
+
+    fn enum_file_paths(&self) -> Vec<ObjectPath> {
+        get_paths(&self.enum_types())
     }
 
     fn scalar_file_paths(&self) -> Vec<ObjectPath> {
@@ -203,6 +216,21 @@ impl<'a> Context<'a> {
             .iter()
             .filter_map(|f| match &f.kind {
                 TypeKind::Union(kind) => Some(UnionTypeWrapper {
+                    doc: *f,
+                    kind,
+                    context: self,
+                }),
+                _ => None,
+            })
+            .collect()
+    }
+
+    #[must_use]
+    pub fn enum_types(&self) -> Vec<EnumTypeWrapper> {
+        self.type_definition()
+            .iter()
+            .filter_map(|f| match &f.kind {
+                TypeKind::Enum(kind) => Some(EnumTypeWrapper {
                     doc: *f,
                     kind,
                     context: self,
