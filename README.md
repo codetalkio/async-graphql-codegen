@@ -7,3 +7,4 @@
 ```
 
 ## [See tiny demo](https://github.com/uselessgoddess/codegen-for-async-graphql/tree/master/examples/codegen-for-async-graphql-example)
+#### dependencies scan temporary disabled
