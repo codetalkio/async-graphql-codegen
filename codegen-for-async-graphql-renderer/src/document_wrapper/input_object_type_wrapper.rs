@@ -1,10 +1,12 @@
-use async_graphql_parser::schema::{InputObjectType, InputValue};
+use async_graphql_parser::types::{InputObjectType, InputValueDefinition, TypeDefinition};
 
 use super::{Context, FileRender, RenderType, SupportField, UseContext};
 
 #[derive(Debug, Clone)]
 pub struct InputObjectTypeWrapper<'a, 'b> {
-    pub doc: &'a InputObjectType,
+    // TODO: before -- pub doc: &'a InputObjectType,
+    pub doc: &'a TypeDefinition,
+    pub input: &'a InputObjectType,
     pub context: &'a Context<'b>,
 }
 
@@ -17,7 +19,7 @@ impl<'a, 'b> FileRender for InputObjectTypeWrapper<'a, 'b> {
 impl<'a, 'b> RenderType for InputObjectTypeWrapper<'a, 'b> {
     #[must_use]
     fn name(&self) -> String {
-        self.doc.name.node.clone()
+        self.doc.name.node.as_str().into()
     }
 
     #[must_use]
@@ -36,9 +38,7 @@ impl<'a, 'b> UseContext for InputObjectTypeWrapper<'a, 'b> {
 }
 
 impl<'a, 'b> SupportField for InputObjectTypeWrapper<'a, 'b> {
-    fn input_value_types(&self) -> Vec<&InputValue> {
-        let mut res = vec![];
-        self.doc.fields.iter().for_each(|f| res.push(&f.node));
-        res
+    fn input_value_types(&self) -> Vec<&InputValueDefinition> {
+        self.input.fields.iter().map(|f| &f.node).collect()
     }
 }

@@ -1,9 +1,11 @@
-use async_graphql_parser::schema::ObjectType;
+use async_graphql_parser::types::{ObjectType, TypeDefinition};
+use itertools::Itertools;
 
 use super::{Context, Dependency, FileRender, RenderType, SubscriptionTypeWrapper, SupportField};
 
 pub struct SubscriptionRootTypeWrapper<'a, 'b> {
-    pub doc: &'a ObjectType,
+    pub doc: &'a TypeDefinition,
+    pub object: &'a ObjectType,
     pub context: &'a Context<'b>,
 }
 
@@ -16,7 +18,7 @@ impl<'a, 'b> FileRender for SubscriptionRootTypeWrapper<'a, 'b> {
 impl<'a, 'b> RenderType for SubscriptionRootTypeWrapper<'a, 'b> {
     #[must_use]
     fn name(&self) -> String {
-        self.doc.name.node.clone()
+        self.doc.name.node.as_str().into()
     }
 
     #[must_use]
@@ -31,7 +33,7 @@ impl<'a, 'b> RenderType for SubscriptionRootTypeWrapper<'a, 'b> {
 impl<'a, 'b> SubscriptionRootTypeWrapper<'a, 'b> {
     #[must_use]
     pub fn mutations(&self) -> Vec<SubscriptionTypeWrapper> {
-        self.doc
+        self.object
             .fields
             .iter()
             .map(|f| SubscriptionTypeWrapper {

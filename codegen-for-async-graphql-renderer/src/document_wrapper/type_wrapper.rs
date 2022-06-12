@@ -1,5 +1,7 @@
 use super::{snake_case, Context, FieldWrapper, InputValueWrapper};
-use async_graphql_parser::schema::{InputValue, Type};
+use async_graphql_parser::types::{
+    BaseType as BaseTypeDefinition, InputValueDefinition, Type, TypeDefinition,
+};
 
 pub trait RenderType {
     fn name(&self) -> String;
@@ -39,7 +41,8 @@ pub trait FileRender: RenderType {
 
 #[derive(Debug, Clone)]
 pub struct BaseType<'a, 'b, T> {
-    pub doc: &'a T,
+    pub doc: &'a TypeDefinition,
+    pub kind: &'a T,
     pub context: &'a Context<'b>,
 }
 
@@ -53,7 +56,8 @@ pub trait SupportFields {
 
     #[must_use]
     fn dependencies(&self) -> Vec<Dependency> {
-        let mut deps: Vec<_> = self.fields()
+        let mut deps: Vec<_> = self
+            .fields()
             .into_iter()
             .flat_map(|f| f.dependencies())
             .collect();
@@ -82,7 +86,7 @@ pub trait SupportFields {
 }
 
 pub trait SupportField: UseContext {
-    fn input_value_types(&self) -> Vec<&InputValue>;
+    fn input_value_types(&self) -> Vec<&InputValueDefinition>;
 
     fn arguments(&self) -> Vec<InputValueWrapper> {
         self.input_value_types()
@@ -112,42 +116,34 @@ pub trait SupportType: RenderType {
 
     #[must_use]
     fn non_null(&self) -> bool {
-        match &self.ty() {
-            Type::NonNull(_t) => true,
-            _ => false,
-        }
+        !self.ty().nullable
     }
 
     #[must_use]
     fn is_list(&self) -> bool {
-        match &self.ty() {
-            Type::List(_t) => true,
-            Type::NonNull(t) => match &**t {
-                Type::List(_t) => true,
-                _ => false,
-            },
+        match self.ty().base {
+            BaseTypeDefinition::List(_) => true,
             _ => false,
         }
     }
 
     #[must_use]
     fn type_name(&self) -> String {
-        match &self.ty() {
-            Type::Named(name) => name.clone(),
-            Type::NonNull(t) | Type::List(t) => Self::nested_type_name(t),
+        //match &self.ty() {
+        //    Type::Named(name) => name.clone(),
+        //    Type::NonNull(t) | Type::List(t) => Self::nested_type_name(t),
+        //}
+        match &self.ty().base {
+            BaseTypeDefinition::Named(name) => name.as_str().into(),
+            BaseTypeDefinition::List(t) => Self::nested_type_name(t.as_ref()),
         }
     }
 
     #[must_use]
     fn nested_type_name(t: &Type) -> String {
-        match &*t {
-            Type::Named(name) => name.clone(),
-            Type::List(t) => {
-                Self::nested_type_name(t)
-            }
-            Type::NonNull(t) => {
-                Self::nested_type_name(t)
-            }
+        match &t.base {
+            BaseTypeDefinition::Named(name) => name.to_string(),
+            BaseTypeDefinition::List(t) => Self::nested_type_name(t),
         }
     }
 
