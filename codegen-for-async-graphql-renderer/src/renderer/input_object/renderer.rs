@@ -46,7 +46,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
             // TODO: later better scan deps
             use async_graphql::*;
 
-            #[derive(InputObject)]
+            #[derive(InputObject, Debug)]
             pub struct #name {
                 #field_properties_token
             }

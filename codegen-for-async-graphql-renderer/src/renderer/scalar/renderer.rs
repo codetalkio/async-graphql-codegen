@@ -48,19 +48,16 @@ impl<'a, 'b> Renderer<'a, 'b> {
             use async_graphql::*;
 
             #[derive(Debug, Clone)]
-            pub struct #struct_name(pub String);
+            pub struct #struct_name(!);
 
             #[Scalar]
             impl ScalarType for #struct_name {
                 fn parse(value: Value) -> InputValueResult<Self> {
-                    match value {
-                        Value::String(s) => Ok(#struct_name(s)),
-                        _ => Err(InputValueError::ExpectedType(value)),
-                    }
+                    todo!()
                 }
 
                 fn to_value(&self) -> Value {
-                    Value::String(self.0.to_string())
+                    todo!()
                 }
             }
         )

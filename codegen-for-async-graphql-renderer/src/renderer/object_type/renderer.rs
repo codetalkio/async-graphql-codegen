@@ -104,6 +104,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
             #dependencies
 
             // TODO: add comment
+            #[derive(Debug)]
             pub struct #name;
 
             #[Object]
