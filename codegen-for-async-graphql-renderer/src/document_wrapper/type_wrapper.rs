@@ -159,7 +159,7 @@ pub trait SupportType: RenderType {
     fn code_type_name(&self) -> String {
         let name = self.type_name();
         match name.as_str() {
-            "Bool" | "Boolean" => "bool".to_string(),
+            "Boolean" => "bool".to_string(),
             "Int" => "i32".to_string(),
             "Float" => "f64".to_string(),
             "ID" => "ID".to_string(),
@@ -179,7 +179,9 @@ pub trait SupportTypeName: SupportType + UseContext {
         let names = self.context().scalar_names();
         let name = &self.gql_type_name();
         match name.as_str() {
-            "String" | "Bool" | "Int" | "Float" | "ID" => Some(ScalarTypeOnScalar::DefaultScalar),
+            "String" | "Boolean" | "Int" | "Float" | "ID" => {
+                Some(ScalarTypeOnScalar::DefaultScalar)
+            }
             _ => {
                 if names.iter().any(|f| f == name) {
                     Some(ScalarTypeOnScalar::CustomScalar)

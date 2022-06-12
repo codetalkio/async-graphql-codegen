@@ -41,8 +41,8 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn token_stream(&self) -> TokenStream {
-        let name = self.gql_name_token();
-        let rust_name = self.name_token();
+        let gql_name = self.gql_name_token();
+        let name = self.name_token();
         let fields = self.custom_fields_token();
         let struct_properties = self.struct_properties_token();
         let scalar_fields_token = self.scalar_fields_token();
@@ -51,8 +51,8 @@ impl<'a, 'b> Renderer<'a, 'b> {
 
         Self::object_type_code(
             &dependencies,
+            &gql_name,
             &name,
-            &rust_name,
             &struct_properties,
             &fields,
             &scalar_fields_token,
@@ -72,8 +72,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn gql_name_token(&self) -> TokenStream {
-        let name = Ident::new(&self.wrapper_object.gql_name(), Span::call_site());
-        quote!(#name)
+        self.wrapper_object.gql_name().to_token_stream()
     }
 
     fn name_token(&self) -> TokenStream {
@@ -113,9 +112,6 @@ impl<'a, 'b> Renderer<'a, 'b> {
         fields: &TokenStream,
         scalar_fields_token: &TokenStream,
     ) -> TokenStream {
-        let gql: TokenStream = format!(r#"#[graphql(name = "{}")]"#, gql_name.to_string())
-            .parse()
-            .unwrap();
         quote!(
             #dependencies
 
@@ -123,8 +119,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
             #[derive(Debug)]
             pub struct #name;
 
-            #[Object]
-            #gql
+            #[Object(name = #gql_name)]
             impl #name {
                 #fields
                 #scalar_fields_token
