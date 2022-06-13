@@ -1,6 +1,6 @@
 use super::{FileRender, RenderType, Save, ScalarTypeWrapper};
 
-use quote::quote;
+use quote::{quote, ToTokens};
 
 use proc_macro2::{Ident, Span, TokenStream};
 
@@ -34,23 +34,27 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn token_stream(&self) -> TokenStream {
-        let struct_name = self.struct_name();
+        let struct_name = Ident::new(&self.wrapper_object.name(), Span::call_site());
+        let name = self.wrapper_object.name();
+        let gql_name = self.wrapper_object.gql_name();
 
-        Self::scalar_code(&struct_name)
-    }
+        let attribute = if gql_name != name {
+            quote! {
+                #[Scalar(name = #gql_name)]
+            }
+        } else {
+            quote! {
+                #[Scalar]
+            }
+        };
 
-    fn struct_name(&self) -> Ident {
-        Ident::new(&self.wrapper_object.name(), Span::call_site())
-    }
-
-    fn scalar_code(struct_name: &Ident) -> TokenStream {
-        quote!(
+        quote! {
             use async_graphql::*;
 
             #[derive(Debug, Clone)]
             pub struct #struct_name(!);
 
-            #[Scalar]
+            #attribute
             impl ScalarType for #struct_name {
                 fn parse(value: Value) -> InputValueResult<Self> {
                     todo!()
@@ -60,6 +64,6 @@ impl<'a, 'b> Renderer<'a, 'b> {
                     todo!()
                 }
             }
-        )
+        }
     }
 }

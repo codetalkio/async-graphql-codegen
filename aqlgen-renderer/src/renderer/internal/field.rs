@@ -3,6 +3,7 @@ use proc_macro2::{Ident, Span, TokenStream};
 use quote::{quote, ToTokens};
 
 use super::{SupportField, SupportType, SupportTypeName};
+use heck::ToLowerCamelCase;
 
 pub trait Render {
     fn field_name_token<T>(f: &T) -> TokenStream
@@ -39,7 +40,11 @@ pub trait Render {
 
         let mut ty = quote! { #name };
         if f.is_list() {
-            ty = quote! { Vec<#ty> };
+            if f.non_null_base() {
+                ty = quote! { Vec<#ty> };
+            } else {
+                ty = quote! { Vec<Option<#ty>> };
+            }
         } else if &name_str == self_ty {
             ty = quote! { Box<#ty> };
         }
@@ -49,13 +54,12 @@ pub trait Render {
         ty
     }
 
-    fn rename_token<T>(f: &T) -> TokenStream
-    where
-        T: SupportType,
-    {
-        let name = f.gql_name();
-        let name = Ident::new(name.as_str(), Span::call_site());
-        format!(r#"#[graphql(name = "{}")]"#, name).parse().unwrap()
+    fn rename_token(name: &str, gql_name: &str) -> TokenStream {
+        if name.to_lower_camel_case() != gql_name {
+            quote! { #[graphql(name = #gql_name)] }
+        } else {
+            quote! {}
+        }
     }
 }
 
@@ -72,8 +76,10 @@ impl Renderer {
         f.arguments().iter().for_each(|f| {
             let code_type_name = Self::struct_name_token(f);
             let field_name = Ident::new(&f.field_name(), Span::call_site());
+            let gql_name = f.gql_name().to_token_stream();
             res = quote!(
                 #res
+                #[graphql(name = #gql_name)]
                 #field_name: #code_type_name,
             );
         });
@@ -99,36 +105,34 @@ impl Renderer {
     where
         T: SupportTypeName + SupportType + SupportField,
     {
-        let n = &Self::field_name_token(f);
         let ty = &Self::struct_name_token(f);
-        let arguments = Self::arguments_token(f);
-        let arguments_variebles = Self::arguments_variebles(f);
-        let field = match f.description() {
-            // TODO: unwrap(
-            // TODO: Some(desc) => format!(r#"/// {}"#, desc).parse().unwrap(),
-            Some(desc) => quote! {},
-            None => quote!(),
-        };
-        let gql = &Self::rename_token(f);
-        quote!(
-            #field
-            #gql
-            pub async fn #n(&self, ctx: &Context<'_>, #arguments) -> #ty {
+        let arguments = &Self::arguments_token(f);
+
+        let name = f.field_name();
+        let gql_name = f.gql_name();
+        let param = &Self::rename_token(&name, &gql_name);
+        let name = Ident::new(&name, Span::call_site());
+        quote! {
+            #param
+            pub async fn #name(&self, ctx: &Context<'_>, #arguments) -> #ty {
                 todo!()
             }
-        )
+        }
     }
 
     pub fn scalar_fields_token<T>(f: &T) -> TokenStream
     where
         T: SupportTypeName + SupportType,
     {
-        let n = &Self::field_name_token(f);
         let ty = &Self::struct_name_token(f);
-        let gql = &Self::rename_token(f);
+
+        let name = f.field_name();
+        let gql_name = f.gql_name();
+        let param = Self::rename_token(&name, &gql_name);
+        let name = Ident::new(&name, Span::call_site());
         quote!(
-            #gql
-            pub async fn #n(&self, ctx: &Context<'_>) -> #ty {
+            #param
+            pub async fn #name(&self, ctx: &Context<'_>) -> #ty {
                 todo!()
             }
         )
@@ -138,26 +142,32 @@ impl Renderer {
     where
         T: SupportTypeName + SupportType,
     {
-        let n = &Self::field_name_token(f);
+        let name = f.field_name();
+        let gql_name = f.gql_name();
+        let param = Self::rename_token(&name, &gql_name);
+
+        let name = Ident::new(&name, Span::call_site());
         let ty = &Self::struct_name_token(f);
-        let gql = &Self::rename_token(f);
-        quote!(
-            #gql
-            pub #n : #ty
-        )
+        quote! {
+            #param
+            pub #name : #ty
+        }
     }
 
     pub fn field_property_token_with_recursion<T>(self_ty: &str, f: &T) -> TokenStream
     where
         T: SupportTypeName + SupportType,
     {
-        let n = &Self::field_name_token(f);
+        let name = f.field_name();
+        let gql_name = f.gql_name();
+        let param = Self::rename_token(&name, &gql_name);
+
+        let name = Ident::new(&name, Span::call_site());
         let ty = &Self::struct_name_token_with_recursion(self_ty, f);
-        let gql = &Self::rename_token(f);
-        quote!(
-            #gql
-            pub #n : #ty
-        )
+        quote! {
+            #param
+            pub #name : #ty
+        }
     }
 
     pub fn field_interface_token<T>(f: &T) -> TokenStream

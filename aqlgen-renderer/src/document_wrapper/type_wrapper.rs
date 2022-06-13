@@ -130,6 +130,14 @@ pub trait SupportType: RenderType {
     }
 
     #[must_use]
+    fn non_null_base(&self) -> bool {
+        match self.ty().base {
+            BaseTypeDefinition::List(ref list) => !list.nullable,
+            _ => false,
+        }
+    }
+
+    #[must_use]
     fn is_list(&self) -> bool {
         match self.ty().base {
             BaseTypeDefinition::List(_) => true,

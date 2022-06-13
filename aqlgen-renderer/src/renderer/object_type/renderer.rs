@@ -41,22 +41,38 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn token_stream(&self) -> TokenStream {
-        let gql_name = self.gql_name_token();
-        let name = self.name_token();
         let fields = self.custom_fields_token();
         let struct_properties = self.struct_properties_token();
         let scalar_fields_token = self.scalar_fields_token();
-
         let dependencies = self.dependencies_token();
 
-        Self::object_type_code(
-            &dependencies,
-            &gql_name,
-            &name,
-            &struct_properties,
-            &fields,
-            &scalar_fields_token,
-        )
+        let gql_name = self.wrapper_object.gql_name();
+        let name = self.wrapper_object.name();
+
+        let attribute = if gql_name != name {
+            quote! {
+                #[Object(name = #gql_name)]
+            }
+        } else {
+            quote! {
+                #[Object]
+            }
+        };
+
+        let name = Ident::new(&name, Span::call_site());
+        quote! {
+            #dependencies
+
+            // TODO: add comment
+            #[derive(Debug)]
+            pub struct #name;
+
+            #attribute
+            impl #name {
+                #fields
+                #scalar_fields_token
+            }
+        }
     }
 
     fn dependencies_token(&self) -> TokenStream {
@@ -102,29 +118,6 @@ impl<'a, 'b> Renderer<'a, 'b> {
             );
         });
         fields
-    }
-
-    fn object_type_code(
-        dependencies: &TokenStream,
-        gql_name: &TokenStream,
-        name: &TokenStream,
-        struct_properties: &TokenStream,
-        fields: &TokenStream,
-        scalar_fields_token: &TokenStream,
-    ) -> TokenStream {
-        quote!(
-            #dependencies
-
-            // TODO: add comment
-            #[derive(Debug)]
-            pub struct #name;
-
-            #[Object(name = #gql_name)]
-            impl #name {
-                #fields
-                #scalar_fields_token
-            }
-        )
     }
 
     fn scalar_fields_token(&self) -> TokenStream {
