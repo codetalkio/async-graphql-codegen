@@ -8,10 +8,10 @@ use aqlgen_renderer::{generate_from_path, Config};
 struct Opts {
     _dummy: Option<String>,
     /// Path to the schema file
-    #[clap(short, long, required = true)]
+    #[clap(long, required = true)]
     schema: String,
     /// Path to the output folder
-    #[clap(short, long, required = true)]
+    #[clap(long, required = true)]
     output: String,
 }
 
