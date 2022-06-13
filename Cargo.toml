@@ -1,31 +1,6 @@
-[package]
-name = "aqlgen"
-version = "0.1.0"
-authors = [
-    "Atsuhiro Takahashi <fxyoxbjis@gmail.com>",
-    "uselessgoddess <dodickgod@gmail.com>",
-    "Linksplatform Team <linksplatformtechnologies@gmail.com>",
-]
-edition = "2021"
-description = "Code generation for async-graphql 4"
-publish = true
-license = "MIT"
-homepage = "https://github.com/linksplatform/aqlgen"
-repository = "https://github.com/linksplatform/aqlgen"
-keywords = ["graphql", "async-graphql"]
-categories = ["network-programming"]
-readme = "README.md"
-
-[[bin]]
-name = "cargo-aqlgen"
-path = "src/codegen.rs"
-
-[dependencies]
-clap = "3.1"
-clap_derive = "3.1"
-aqlgen-renderer = { path = "aqlgen-renderer", version = "0.1.0" }
-
 [workspace]
+
 members = [
+    "aqlgen",
     "aqlgen-renderer",
 ]
