@@ -14,7 +14,7 @@ homepage = "https://github.com/linksplatform/aqlgen"
 repository = "https://github.com/linksplatform/aqlgen"
 keywords = ["graphql", "async-graphql"]
 categories = ["network-programming"]
-readme = "README.md"
+readme = "../README.md"
 
 [[bin]]
 name = "cargo-aqlgen"
