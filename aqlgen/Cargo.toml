@@ -23,4 +23,4 @@ path = "src/codegen.rs"
 [dependencies]
 clap = "3.1"
 clap_derive = "3.1"
-aqlgen-renderer = { path = "../aqlgen-renderer", version = "0.1.0" }
+aqlgen-renderer = { path = "../aqlgen-renderer", version = "0.2.0" }
