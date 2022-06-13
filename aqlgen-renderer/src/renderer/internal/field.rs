@@ -30,6 +30,25 @@ pub trait Render {
         }
     }
 
+    fn struct_name_token_with_recursion<T>(self_ty: &str, f: &T) -> TokenStream
+    where
+        T: SupportType,
+    {
+        let name_str = f.code_type_name();
+        let name = Ident::new(&name_str, Span::call_site());
+
+        let mut ty = quote! { #name };
+        if f.is_list() {
+            ty = quote! { Vec<#ty> };
+        } else if &name_str == self_ty {
+            ty = quote! { Box<#ty> };
+        }
+        if !f.non_null() {
+            ty = quote! { Option<#ty> };
+        }
+        ty
+    }
+
     fn rename_token<T>(f: &T) -> TokenStream
     where
         T: SupportType,
@@ -121,6 +140,19 @@ impl Renderer {
     {
         let n = &Self::field_name_token(f);
         let ty = &Self::struct_name_token(f);
+        let gql = &Self::rename_token(f);
+        quote!(
+            #gql
+            pub #n : #ty
+        )
+    }
+
+    pub fn field_property_token_with_recursion<T>(self_ty: &str, f: &T) -> TokenStream
+    where
+        T: SupportTypeName + SupportType,
+    {
+        let n = &Self::field_name_token(f);
+        let ty = &Self::struct_name_token_with_recursion(self_ty, f);
         let gql = &Self::rename_token(f);
         quote!(
             #gql

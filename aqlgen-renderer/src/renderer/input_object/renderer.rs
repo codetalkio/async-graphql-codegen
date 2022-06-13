@@ -1,4 +1,4 @@
-use quote::quote;
+use quote::{quote, ToTokens};
 
 use proc_macro2::{Ident, Span, TokenStream};
 
@@ -41,12 +41,14 @@ impl<'a, 'b> Renderer<'a, 'b> {
     fn token_stream(&self) -> TokenStream {
         let field_properties_token = self.field_properties_token();
         let name = Ident::new(&self.wrapper_object.name(), Span::call_site());
+        let gql_name = self.wrapper_object.gql_name().to_token_stream();
         let deps = self.dependencies_token();
 
         quote!(
             #deps
 
             #[derive(InputObject, Debug)]
+            #[graphql(name = #gql_name)]
             pub struct #name {
                 #field_properties_token
             }
@@ -54,10 +56,13 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn dependencies_token(&self) -> TokenStream {
-        let dep = Self::render_dependencies(&self.wrapper_object.name(), vec![]);
+        let dep = Self::render_dependencies(
+            &self.wrapper_object.name(),
+            self.wrapper_object.arguments_dependencies(),
+        );
         quote!(
             // TODO: later better scan deps
-            use async_graphql::{Context, Object, Enum, InputObject, Union, Interface, Scalar, ScalarType, ID, Value, InputValueResult};
+            use async_graphql::*;
             #dep
         )
     }
@@ -65,7 +70,8 @@ impl<'a, 'b> Renderer<'a, 'b> {
     fn field_properties_token(&self) -> TokenStream {
         let mut res = quote!();
         self.wrapper_object.fields().iter().for_each(|f| {
-            let field_property_token = FieldRenderer::field_property_token(f);
+            let field_property_token =
+                FieldRenderer::field_property_token_with_recursion(&self.wrapper_object.name(), f);
             res = quote!(
                 #res
                 #field_property_token,

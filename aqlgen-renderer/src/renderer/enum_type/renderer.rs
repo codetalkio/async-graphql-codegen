@@ -61,9 +61,9 @@ impl<'a, 'b> Renderer<'a, 'b> {
         let enum_values = self.enum_values_tokens();
         let gql_name = self.wrapper_object.gql_name().to_token_stream();
         quote!(
-            use async_graphql::{Context, Object, Enum, InputObject, Union, Interface, Scalar, ScalarType, ID, Value, InputValueResult};
+            use async_graphql::*;
 
-            #[derive(Enum, Copy, Clone, Eq, PartialEq)]
+            #[derive(Enum, Debug, Copy, Clone, Eq, PartialEq)]
             #[graphql(name = #gql_name)]
             pub enum #name {
                 #enum_values
@@ -74,10 +74,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
     fn dependencies_token(&self) -> TokenStream {
         quote!(
             // TODO: later better scan deps
-            use async_graphql::{
-                Context, Object, Enum, InputObject, Union, Interface, Scalar, ID, Value,
-                InputValueResult,
-            };
+            use async_graphql::*;
         )
     }
 }
