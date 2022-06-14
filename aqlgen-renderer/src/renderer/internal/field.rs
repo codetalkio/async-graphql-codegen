@@ -75,11 +75,13 @@ impl Renderer {
         let mut res = quote!();
         f.arguments().iter().for_each(|f| {
             let code_type_name = Self::struct_name_token(f);
-            let field_name = Ident::new(&f.field_name(), Span::call_site());
-            let gql_name = f.gql_name().to_token_stream();
+            let gql_name = f.gql_name();
+            let field_name = f.field_name();
+            let param = Self::rename_token(&field_name, &gql_name);
+            let field_name = Ident::new(&field_name, Span::call_site());
             res = quote!(
                 #res
-                #[graphql(name = #gql_name)]
+                #param
                 #field_name: #code_type_name,
             );
         });

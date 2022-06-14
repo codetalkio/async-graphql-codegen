@@ -83,7 +83,8 @@ pub trait SupportFields {
     }
 
     fn field_partition(&self) -> (Vec<FieldWrapper>, Vec<FieldWrapper>) {
-        self.fields().into_iter().partition(FieldWrapper::is_scalar)
+        //self.fields().into_iter().partition(FieldWrapper::is_scalar)
+        self.fields().into_iter().partition(|_| false)
     }
 
     fn custom_fields(&self) -> Vec<FieldWrapper> {
