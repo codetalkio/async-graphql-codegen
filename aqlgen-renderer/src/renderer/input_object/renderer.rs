@@ -40,15 +40,24 @@ impl<'a, 'b> Renderer<'a, 'b> {
 
     fn token_stream(&self) -> TokenStream {
         let field_properties_token = self.field_properties_token();
-        let name = Ident::new(&self.wrapper_object.name(), Span::call_site());
-        let gql_name = self.wrapper_object.gql_name().to_token_stream();
+        let gql_name = self.wrapper_object.gql_name();
+        let name = self.wrapper_object.name();
         let deps = self.dependencies_token();
 
+        let param = if gql_name != name {
+            quote! {
+                #[graphql(name = #gql_name)]
+            }
+        } else {
+            quote! {}
+        };
+
+        let name = Ident::new(&self.wrapper_object.name(), Span::call_site());
         quote!(
             #deps
 
             #[derive(InputObject, Debug)]
-            #[graphql(name = #gql_name)]
+            #param
             pub struct #name {
                 #field_properties_token
             }

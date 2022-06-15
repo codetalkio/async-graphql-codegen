@@ -166,7 +166,7 @@ pub trait SupportType: RenderType {
 
     #[must_use]
     fn code_type_name(&self) -> String {
-        let name = self.type_name();
+        let name = self.gql_type_name();
         match name.as_str() {
             "Boolean" => "bool".to_string(),
             "Int" => "i32".to_string(),
