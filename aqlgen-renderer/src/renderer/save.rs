@@ -34,7 +34,7 @@ fn prepare_path(base_path: &str, super_module_name: Option<String>, file_name: &
 pub fn lint(path: &str) {
     let rustfmt = toolchain_find::find_installed_component("rustfmt").unwrap();
     Command::new(&rustfmt)
-        .arg("--edition=2018")
+        .arg("--edition=2021")
         .arg(path)
         .stderr(Stdio::null())
         .output()

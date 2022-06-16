@@ -17,8 +17,9 @@ mod schema;
 
 ...
 ```
-2. Put your schema any folder (for example)
+2. Put your schema to any folder
 ```graphql
+# example schema
 type Book {
     id: ID!
     name: String!
@@ -41,7 +42,7 @@ type MutationRoot {
 3. Run aqlgen
 ```shell
 # in project/src
-cargo aqlgen --schema schema.graphql --output model
+cargo aqlgen --schema schema.graphql --output schema
 ```
 4. Enjoy your generation
 ```rust
@@ -80,7 +81,7 @@ pub struct InputBook {
 
 ```rust
 //! query_root.rs
-use crate::model::Book;
+use super::super::Book;
 use async_graphql::*;
 
 #[derive(Debug)]
@@ -96,8 +97,8 @@ impl QueryRoot {
 
 ```rust
 //! mutation_root.rs
-use crate::model::Book;
-use crate::model::InputBook;
+use super::super::Book;
+use super::super::InputBook;
 use async_graphql::*;
 
 #[derive(Debug)]

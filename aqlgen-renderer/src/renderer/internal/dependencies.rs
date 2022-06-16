@@ -10,19 +10,28 @@ pub trait Render {
     fn render_dependencies(this: &str, dependencies: Vec<Dependency>) -> TokenStream {
         let mut res = quote!();
         let mut set = HashSet::new();
-        set.extend(dependencies.iter().map(|d| &d.name));
+        set.extend(dependencies.into_iter().map(|d| d.name));
 
-        for f in set {
-            if f.as_str() == this {
+        let set_size = set.len();
+        for name in set {
+            if name.as_str() == this {
                 continue;
             }
-            let name = Ident::new(f, Span::call_site());
+            let name = Ident::new(&name, Span::call_site());
             res = quote!(
                 #res
-                use crate::model::#name;
+                #name,
             )
         }
-        res
+        if set_size != 0 {
+            quote! {
+                use super::super::{
+                    #res
+                };
+            }
+        } else {
+            quote! {}
+        }
     }
 
     //fn render_dependencies(this: &str, dependencies: Vec<Dependency>) -> TokenStream {
