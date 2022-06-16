@@ -172,7 +172,7 @@ pub trait SupportType: RenderType {
             "Int" => "i32".to_string(),
             "Float" => "f64".to_string(),
             "ID" => "ID".to_string(),
-            _ => name.to_string(),
+            _ => self.type_name(),
         }
     }
 }
