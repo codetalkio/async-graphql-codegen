@@ -97,8 +97,7 @@ impl QueryRoot {
 
 ```rust
 //! mutation_root.rs
-use super::super::Book;
-use super::super::InputBook;
+use super::super::{Book, InputBook};
 use async_graphql::*;
 
 #[derive(Debug)]
