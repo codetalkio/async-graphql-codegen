@@ -12,13 +12,13 @@ impl<'a, 'b> FileRender for ScalarTypeWrapper<'a, 'b> {
 impl<'a, 'b> RenderType for ScalarTypeWrapper<'a, 'b> {
     #[must_use]
     fn gql_name(&self) -> String {
-        self.doc.name.node.as_str().into()
+        self.doc.name.node.to_string()
     }
 
     #[must_use]
     fn description(&self) -> Option<&String> {
         match &self.doc.description {
-            Some(_f) => panic!("Not Implemented"),
+            Some(_) => panic!("Not Implemented"),
             _ => None,
         }
     }

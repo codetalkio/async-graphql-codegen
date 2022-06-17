@@ -13,7 +13,7 @@ impl<'a, 'b> FileRender for ObjectTypeWrapper<'a, 'b> {
 impl<'a, 'b> RenderType for ObjectTypeWrapper<'a, 'b> {
     #[must_use]
     fn gql_name(&self) -> String {
-        self.doc.name.node.as_str().into()
+        self.doc.name.node.to_string()
     }
 
     #[must_use]
@@ -44,7 +44,7 @@ impl<'a, 'b> ObjectTypeWrapper<'a, 'b> {
         self.kind
             .implements
             .iter()
-            .map(|f| f.node.as_str().into())
+            .map(|f| f.node.to_string())
             .collect()
     }
 }

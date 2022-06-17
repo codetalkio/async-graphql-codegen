@@ -140,10 +140,7 @@ pub trait SupportType: RenderType {
 
     #[must_use]
     fn is_list(&self) -> bool {
-        match self.ty().base {
-            BaseTypeDefinition::List(_) => true,
-            _ => false,
-        }
+        matches!(self.ty().base, BaseTypeDefinition::List(_))
     }
 
     #[must_use]
@@ -202,13 +199,7 @@ pub trait SupportTypeName: SupportType + UseContext {
     }
 
     fn is_default_scalar(&self) -> bool {
-        match &self.scalar_type() {
-            Some(t) => match t {
-                ScalarTypeOnScalar::DefaultScalar => true,
-                _ => false,
-            },
-            _ => false,
-        }
+        matches!(self.scalar_type(), Some(ScalarTypeOnScalar::DefaultScalar))
     }
 
     #[must_use]
@@ -223,10 +214,7 @@ pub trait SupportTypeName: SupportType + UseContext {
 
     #[must_use]
     fn is_scalar(&self) -> bool {
-        match &self.scalar_type() {
-            Some(_t) => true,
-            _ => false,
-        }
+        self.scalar_type().is_some()
     }
 
     fn is_input_object_type(&self) -> bool {
@@ -243,13 +231,7 @@ pub trait SupportTypeName: SupportType + UseContext {
 
     #[must_use]
     fn is_custom_scalar(&self) -> bool {
-        match &self.scalar_type() {
-            Some(t) => match t {
-                ScalarTypeOnScalar::CustomScalar => true,
-                _ => false,
-            },
-            _ => false,
-        }
+        matches!(self.scalar_type(), Some(ScalarTypeOnScalar::CustomScalar))
     }
 
     fn super_module_name(&self) -> Option<String> {
@@ -274,7 +256,7 @@ pub trait SupportTypeName: SupportType + UseContext {
                     module_name: self.module_name().unwrap(),
                     name: self.type_name(),
                 };
-                return vec![dep];
+                vec![dep]
             }
             None => vec![],
         }

@@ -7,7 +7,7 @@ use super::{
     SupportFields,
 };
 
-use heck::ToPascalCase;
+
 
 pub struct Renderer<'a, 'b> {
     wrapper_object: &'a ObjectTypeWrapper<'a, 'b>,
@@ -42,7 +42,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
 
     fn token_stream(&self) -> TokenStream {
         let fields = self.custom_fields_token();
-        let struct_properties = self.struct_properties_token();
+        let _struct_properties = self.struct_properties_token();
         let scalar_fields_token = self.scalar_fields_token();
         let dependencies = self.dependencies_token();
 

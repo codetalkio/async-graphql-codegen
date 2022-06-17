@@ -1,6 +1,6 @@
 use crate::document_wrapper::RenderType;
 use proc_macro2::{Ident, Span, TokenStream};
-use quote::{quote, ToTokens};
+use quote::quote;
 
 use super::{SupportField, SupportType, SupportTypeName};
 use heck::ToLowerCamelCase;
@@ -45,7 +45,7 @@ pub trait Render {
             } else {
                 ty = quote! { Vec<Option<#ty>> };
             }
-        } else if &name_str == self_ty {
+        } else if name_str == *self_ty {
             ty = quote! { Box<#ty> };
         }
         if !f.non_null() {

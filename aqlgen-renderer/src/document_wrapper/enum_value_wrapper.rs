@@ -1,9 +1,9 @@
 use super::Context;
 use async_graphql_parser::types::{
-    EnumValueDefinition, FieldDefinition, InputValueDefinition, Type,
+    EnumValueDefinition,
 };
 
-use super::{RenderType, SupportField, SupportType, SupportTypeName, UseContext};
+use super::{RenderType, UseContext};
 
 #[derive(Debug, Clone)]
 pub struct EnumValueWrapper<'a, 'b> {

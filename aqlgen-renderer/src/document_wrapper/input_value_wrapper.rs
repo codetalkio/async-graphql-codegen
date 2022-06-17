@@ -19,7 +19,7 @@ impl<'a, 'b> SupportType for InputValueWrapper<'a, 'b> {
 impl<'a, 'b> RenderType for InputValueWrapper<'a, 'b> {
     #[must_use]
     fn gql_name(&self) -> String {
-        self.doc.name.node.as_str().into()
+        self.doc.name.node.to_string()
     }
 
     #[must_use]

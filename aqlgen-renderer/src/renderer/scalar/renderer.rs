@@ -1,6 +1,6 @@
 use super::{FileRender, RenderType, Save, ScalarTypeWrapper};
 
-use quote::{quote, ToTokens};
+use quote::{quote};
 
 use proc_macro2::{Ident, Span, TokenStream};
 

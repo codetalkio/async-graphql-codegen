@@ -15,7 +15,7 @@ impl<'a, 'b> FileRender for InterfaceTypeWrapper<'a, 'b> {
 impl<'a, 'b> RenderType for InterfaceTypeWrapper<'a, 'b> {
     #[must_use]
     fn gql_name(&self) -> String {
-        self.doc.name.node.as_str().into()
+        self.doc.name.node.to_string()
     }
 
     #[must_use]

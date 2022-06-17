@@ -1,5 +1,4 @@
 use async_graphql_parser::types::{ObjectType, TypeDefinition};
-use itertools::Itertools;
 
 use super::{Context, Dependency, FileRender, RenderType, SubscriptionTypeWrapper, SupportField};
 
@@ -18,7 +17,7 @@ impl<'a, 'b> FileRender for SubscriptionRootTypeWrapper<'a, 'b> {
 impl<'a, 'b> RenderType for SubscriptionRootTypeWrapper<'a, 'b> {
     #[must_use]
     fn gql_name(&self) -> String {
-        self.doc.name.node.as_str().into()
+        self.doc.name.node.to_string()
     }
 
     #[must_use]

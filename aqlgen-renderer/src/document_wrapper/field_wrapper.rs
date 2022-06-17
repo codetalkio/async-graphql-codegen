@@ -32,7 +32,7 @@ impl<'a, 'b> SupportField for FieldWrapper<'a, 'b> {
 impl<'a, 'b> RenderType for FieldWrapper<'a, 'b> {
     #[must_use]
     fn gql_name(&self) -> String {
-        self.doc.name.node.as_str().into()
+        self.doc.name.node.to_string()
     }
 
     #[must_use]

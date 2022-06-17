@@ -1,7 +1,7 @@
 use crate::document_wrapper::EnumValueWrapper;
-use async_graphql_parser::types::{EnumType, EnumValueDefinition, UnionType};
+use async_graphql_parser::types::EnumType;
 
-use super::{BaseType, Dependency, FileRender, ObjectTypeWrapper, RenderType};
+use super::{BaseType, FileRender, RenderType};
 
 pub type EnumTypeWrapper<'a, 'b> = BaseType<'a, 'b, EnumType>;
 
@@ -14,7 +14,7 @@ impl<'a, 'b> FileRender for EnumTypeWrapper<'a, 'b> {
 impl<'a, 'b> RenderType for EnumTypeWrapper<'a, 'b> {
     #[must_use]
     fn gql_name(&self) -> String {
-        self.doc.name.node.as_str().into()
+        self.doc.name.node.to_string()
     }
 
     #[must_use]
