@@ -78,9 +78,16 @@ impl<'a, 'b> Renderer<'a, 'b> {
         f.arguments().iter().for_each(|f| {
             let code_type_name = Ident::new(&f.code_type_name(), Span::call_site());
             let field_name = Ident::new(&f.field_name(), Span::call_site());
+
+            let mut default = quote! {};
+            // todo: implement default values
+            if let Some(_) = &f.doc.default_value {
+                default = quote! { #[graphql(default)] }
+            }
+
             res = quote!(
                 #res
-                #field_name: #code_type_name,
+                #default #field_name: #code_type_name,
             );
         });
         res
