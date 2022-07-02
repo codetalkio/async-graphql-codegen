@@ -1,4 +1,4 @@
-# aqlgen
+# aqlgen - [**IN ARCHIVED**](https://github.com/linksplatform/aqlgen/issues/2)
 
 A schema generator for [async-graphql](https://github.com/async-graphql/async-graphql) 4.x
 
