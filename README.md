@@ -1,23 +1,34 @@
-# aqlgen - [**IN ARCHIVED**](https://github.com/linksplatform/aqlgen/issues/2)
+# Async GraphQL Codegen: Schema First Approach to GraphQL
 
-A schema generator for [async-graphql](https://github.com/async-graphql/async-graphql) 4.x
+A schema generator for [async-graphql](https://github.com/async-graphql/async-graphql) 4.x.
+
+> ⚠️ This is a fork from [linksplatform/aqlgen](https://github.com/linksplatform/aqlgen), which forks [uselessgoddess/codegen-for-async-graphql](https://github.com/uselessgoddess/codegen-for-async-graphql) which forks the original project at [atsuhiro/codegen-for-async-graphql](https://github.com/atsuhiro/codegen-for-async-graphql). All of them seem unmaintained.
 
 ## Quick start
+
 ### Installation 
+
 In order to install, just run the following command
-```shell
-cargo install aqlgen
+
+```bash
+$ cargo install aqlgen
 ```
+
 ### Usage
+
 **Generate async-graphql 4.x schema in 4 easy steps**
+
 1. Create a new empty rust module 
+
 ```rust
 //! main.rs
 mod schema;
 
 ...
 ```
+
 2. Put your schema to any folder
+
 ```graphql
 # example schema
 type Book {
@@ -39,12 +50,16 @@ type MutationRoot {
     createBook(book: InputBook!): Book
 }
 ```
+
 3. Run aqlgen
+
 ```shell
 # in project/src
 cargo aqlgen --schema schema.graphql --output schema
 ```
+
 4. Enjoy your generation
+
 ```rust
 //! book.rs
 use async_graphql::*;
