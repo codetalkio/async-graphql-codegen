@@ -4,6 +4,10 @@ A schema generator for [async-graphql](https://github.com/async-graphql/async-gr
 
 > ⚠️ This is a fork from [linksplatform/gql-gen](https://github.com/linksplatform/gql-gen), which forks [uselessgoddess/codegen-for-async-graphql](https://github.com/uselessgoddess/codegen-for-async-graphql) which forks the original project at [atsuhiro/codegen-for-async-graphql](https://github.com/atsuhiro/codegen-for-async-graphql). All of them seem unmaintained.
 
+Todo:
+- [ ] Support generating code for [custom directives](https://async-graphql.github.io/async-graphql/en/custom_directive.html) ([example here](https://docs.rs/async-graphql/latest/async_graphql/attr.Directive.html#examples))
+- [ ] Support overriding default implementation for fields and [custom scalars](https://async-graphql.github.io/async-graphql/en/custom_scalars.html)
+
 - [Installation](#installation)
 - [Usage](#usage)
   - [Example](#example)

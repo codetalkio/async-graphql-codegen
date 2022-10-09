@@ -3,5 +3,7 @@
 /tmp
 
 examples/target
+examples/schema-test.graphql
+examples/src/test_schema
 examples/src/schema/*
 !examples/src/schema/.gitignore
