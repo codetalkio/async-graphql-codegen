@@ -1,4 +1,7 @@
 /.idea
 /target
 /tmp
-tarpaulin-report.html
+
+examples/target
+examples/src/schema/*
+!examples/src/schema/.gitignore

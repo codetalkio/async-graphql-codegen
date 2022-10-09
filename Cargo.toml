@@ -1,6 +1,8 @@
 [workspace]
-
 members = [
     "gql-gen",
     "gql-renderer",
+]
+exclude = [
+    "examples"
 ]

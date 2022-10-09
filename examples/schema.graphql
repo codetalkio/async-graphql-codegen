@@ -1,0 +1,18 @@
+type Book {
+  id: ID!
+  name: String!
+  author: String!
+}
+
+input InputBook {
+  name: String!
+  author: String!
+}
+
+type QueryRoot {
+  books: [Book!]
+}
+
+type MutationRoot {
+  createBook(book: InputBook!): Book
+}
