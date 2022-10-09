@@ -4,10 +4,9 @@ A schema generator for [async-graphql](https://github.com/async-graphql/async-gr
 
 > ⚠️ This is a fork from [linksplatform/gql-gen](https://github.com/linksplatform/gql-gen), which forks [uselessgoddess/codegen-for-async-graphql](https://github.com/uselessgoddess/codegen-for-async-graphql) which forks the original project at [atsuhiro/codegen-for-async-graphql](https://github.com/atsuhiro/codegen-for-async-graphql). All of them seem unmaintained.
 
-- [Async GraphQL Codegen: Schema First Approach to GraphQL](#async-graphql-codegen-schema-first-approach-to-graphql)
-  - [Installation](#installation)
-  - [Usage](#usage)
-    - [Example](#example)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Example](#example)
 
 ## Installation
 
