@@ -7,8 +7,6 @@ use super::{
     SupportFields,
 };
 
-
-
 pub struct Renderer<'a, 'b> {
     wrapper_object: &'a ObjectTypeWrapper<'a, 'b>,
 }

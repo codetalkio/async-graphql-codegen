@@ -1,15 +1,15 @@
 use clap::Parser;
 
-use aqlgen_renderer::{generate_from_path, Config};
+use gql_renderer::{generate_from_path, Config};
 
 /// Schema generator for async-graphql 4.x
 #[derive(clap_derive::Parser)]
 #[clap(author, version, about, long_about = None)]
 struct Opts {
-    _dummy: Option<String>,
     /// Path to the schema file
     #[clap(long, required = true)]
     schema: String,
+
     /// Path to the output folder
     #[clap(long, required = true)]
     output: String,

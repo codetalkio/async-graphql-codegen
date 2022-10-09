@@ -37,7 +37,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn modules(&self) -> TokenStream {
-        let mut modules = quote! { };
+        let mut modules = quote! {};
         self.context.structured_file_paths().iter().for_each(|f| {
             let name = Ident::new(f.0, Span::call_site());
             modules = quote!(
@@ -49,7 +49,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn uses(&self) -> TokenStream {
-        let mut uses = quote! { };
+        let mut uses = quote! {};
         self.context.file_paths().iter().for_each(|f| {
             let super_module_name = Ident::new(&f.super_module_name, Span::call_site());
             let name = Ident::new(&f.name, Span::call_site());

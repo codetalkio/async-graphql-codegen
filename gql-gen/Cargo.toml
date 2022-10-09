@@ -1,5 +1,5 @@
 [package]
-name = "aqlgen"
+name = "gql-gen"
 version = "0.8.0"
 authors = [
     "Atsuhiro Takahashi <fxyoxbjis@gmail.com>",
@@ -7,19 +7,19 @@ authors = [
     "Linksplatform Team <linksplatformtechnologies@gmail.com>",
 ]
 edition = "2021"
-description = "Schema generator for async-graphql 4.x"
-license = "MIT"
-homepage = "https://github.com/linksplatform/aqlgen"
-repository = "https://github.com/linksplatform/aqlgen"
+description = "Schema generator for async-graphql 4"
+license = "APACHE2.0"
+homepage = "https://github.com/codetalkio/async-graphql-codegen"
+repository = "https://github.com/codetalkio/async-graphql-codegen"
 keywords = ["graphql", "async-graphql"]
 categories = ["network-programming"]
 readme = "../README.md"
 
 [[bin]]
-name = "cargo-aqlgen"
+name = "gql-gen"
 path = "src/codegen.rs"
 
 [dependencies]
-clap = "3.1"
-clap_derive = "3.1"
-aqlgen-renderer = { path = "../aqlgen-renderer", version = "0.8" }
+clap = "4.0.11"
+clap_derive = "4.0.10"
+gql-renderer = { path = "../gql-renderer", version = "0.8" }

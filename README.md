@@ -2,23 +2,26 @@
 
 A schema generator for [async-graphql](https://github.com/async-graphql/async-graphql) 4.x.
 
-> ⚠️ This is a fork from [linksplatform/aqlgen](https://github.com/linksplatform/aqlgen), which forks [uselessgoddess/codegen-for-async-graphql](https://github.com/uselessgoddess/codegen-for-async-graphql) which forks the original project at [atsuhiro/codegen-for-async-graphql](https://github.com/atsuhiro/codegen-for-async-graphql). All of them seem unmaintained.
+> ⚠️ This is a fork from [linksplatform/gql-gen](https://github.com/linksplatform/gql-gen), which forks [uselessgoddess/codegen-for-async-graphql](https://github.com/uselessgoddess/codegen-for-async-graphql) which forks the original project at [atsuhiro/codegen-for-async-graphql](https://github.com/atsuhiro/codegen-for-async-graphql). All of them seem unmaintained.
 
 ## Quick start
 
-### Installation 
+### Installation
 
 In order to install, just run the following command
 
 ```bash
-$ cargo install aqlgen
+$ git clone git@github.com:codetalkio/async-graphql-codegen.git
+$ cd async-graphql-codegen
+$ cargo build --bin cargo-gql-gen
+$ ln -s $(pwd)/target/debug/gql-gen ~/.cargo/bin/gql-gen
 ```
 
 ### Usage
 
-**Generate async-graphql 4.x schema in 4 easy steps**
+**Generate async-graphql schema in 4 easy steps**
 
-1. Create a new empty rust module 
+1. Create a new empty rust module
 
 ```rust
 //! main.rs
@@ -51,11 +54,11 @@ type MutationRoot {
 }
 ```
 
-3. Run aqlgen
+3. Run gql-gen
 
 ```shell
 # in project/src
-cargo aqlgen --schema schema.graphql --output schema
+$ gql-gen -- --schema schema.graphql --output schema
 ```
 
 4. Enjoy your generation
@@ -72,18 +75,18 @@ impl Book {
     pub async fn id(&self, ctx: &Context<'_>) -> ID {
         todo!()
     }
-    
+
     pub async fn name(&self, ctx: &Context<'_>) -> String {
         todo!()
     }
-    
+
     pub async fn author(&self, ctx: &Context<'_>) -> String {
         todo!()
     }
 }
 ```
 
-```rust 
+```rust
 //! input_book.rs
 use async_graphql::*;
 

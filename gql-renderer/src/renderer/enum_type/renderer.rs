@@ -1,4 +1,3 @@
-
 use quote::{quote, ToTokens};
 
 use crate::document_wrapper::{EnumTypeWrapper, RenderType};

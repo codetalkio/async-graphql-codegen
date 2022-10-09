@@ -1,4 +1,4 @@
-use quote::{quote};
+use quote::quote;
 
 use proc_macro2::{Ident, Span, TokenStream};
 

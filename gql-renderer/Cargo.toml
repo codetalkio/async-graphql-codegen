@@ -1,0 +1,25 @@
+[package]
+name = "gql-renderer"
+version = "0.8.0"
+authors = [
+    "Atsuhiro Takahashi <fxyoxbjis@gmail.com>",
+    "uselessgoddess <dodickgod@gmail.com>",
+    "Linksplatform Team <linksplatformtechnologies@gmail.com>",
+]
+edition = "2021"
+description = "Schema generator for async-graphql 4"
+license = "APACHE2.0"
+homepage = "https://github.com/codetalkio/async-graphql-codegen"
+repository = "https://github.com/codetalkio/async-graphql-codegen"
+keywords = ["graphql", "async-graphql"]
+categories = ["network-programming"]
+
+[dependencies]
+syn = "1.0.102"
+heck = "0.4.0"
+itertools = "0.10.5"
+async-graphql = "4.0.15"
+async-graphql-parser = "4.0.15"
+proc-macro2 = { version = "1.0.46", default-features = false }
+quote = "1.0.21"
+toolchain_find = "0.2.0"

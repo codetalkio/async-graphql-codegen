@@ -59,7 +59,7 @@ impl<'a, 'b> Renderer<'a, 'b> {
     }
 
     fn uses(&self) -> TokenStream {
-        let mut uses = quote! { };
+        let mut uses = quote! {};
         self.object_paths.iter().for_each(|f| {
             let module_name = Ident::new(&f.module_name, Span::call_site());
             let name = Ident::new(&f.name, Span::call_site());

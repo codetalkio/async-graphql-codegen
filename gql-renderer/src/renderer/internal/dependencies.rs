@@ -1,4 +1,3 @@
-
 use proc_macro2::{Ident, Span, TokenStream};
 use quote::quote;
 use std::collections::HashSet;

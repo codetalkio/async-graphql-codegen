@@ -1,6 +1,6 @@
 [workspace]
 
 members = [
-    "aqlgen",
-    "aqlgen-renderer",
+    "gql-gen",
+    "gql-renderer",
 ]
