@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"name": "async-graphql-codegen",
+			"path": "."
+		},
+		{
+			"name": "examples",
+			"path": "examples"
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true,
+		"search.exclude": {
+			"**/node_modules": true,
+			"**/target": true,
+			"**/bower_components": true,
+			"**/*.code-search": true,
+			"**/examples/src/schema/*": true
+		}
+	}
+}
